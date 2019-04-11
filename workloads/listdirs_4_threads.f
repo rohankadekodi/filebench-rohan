@@ -19,25 +19,27 @@
 # CDDL HEADER END
 #
 #
-# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-
+# Creates a fileset with a fairly deep directory tree, then does readdir
+# operations on them for a specified amount of time
+#
 set $dir=/mnt/pmem_emul
-set $filesize=5g
-set $nthreads=1
-set $iosize=1m
+set $nfiles=50000
+set $meandirwidth=5
+set $nthreads=4
 
-define file name=largefile1,path=$dir,size=$filesize,prealloc,reuse
+define fileset name=bigfileset,path=$dir,size=0,entries=$nfiles,dirwidth=$meandirwidth,prealloc
 
-define process name=seqread,instances=1
+define process name=lsdir,instances=1
 {
-  thread name=seqread,memsize=10m,instances=$nthreads
+  thread name=dirlister,memsize=1m,instances=$nthreads
   {
-    flowop read name=seqread,filename=largefile1,iosize=$iosize,directio
+    flowop listdir name=open1,filesetname=bigfileset
   }
 }
 
-echo  "Single Stream Direct Read Version 3.0 personality successfully loaded"
+echo  "ListDirs Version 1.0 personality successfully loaded"
 
 run 10

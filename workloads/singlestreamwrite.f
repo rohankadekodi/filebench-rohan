@@ -23,7 +23,7 @@
 # Use is subject to license terms.
 #
 
-set $dir=/tmp
+set $dir=/mnt/pmem_emul
 set $iosize=1m
 set $nthreads=1
 
@@ -38,3 +38,5 @@ define process name=seqwrite,instances=1
 }
 
 echo  "Single Stream Write Version 3.0 personality successfully loaded"
+
+run 10

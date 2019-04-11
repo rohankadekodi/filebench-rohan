@@ -26,12 +26,15 @@
 set $dir=/mnt/pmem_emul
 set $nfiles=10000
 set $meandirwidth=20
+set $cnt=500000
 set $filesize=cvar(type=cvar-gamma,parameters=mean:131072;gamma:1.5)
 set $nthreads=1
 set $iosize=1m
 set $meanappendsize=16k
 set $runtime=20
 
+#set mode quit firstdone
+      
 define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=80
 
 define process name=filereader,instances=1
@@ -48,10 +51,11 @@ define process name=filereader,instances=1
     flowop readwholefile name=readfile1,fd=1,iosize=$iosize
     flowop closefile name=closefile3,fd=1
     flowop deletefile name=deletefile1,filesetname=bigfileset
-    flowop statfile name=statfile1,filesetname=bigfileset
-  }
+    flowop statfile name=statfile1,filesetname=bigfileset  
+    #flowop finishoncount name=finish,value=$cnt,target=wrtfile1
+   }
 }
 
 echo  "File-server Version 3.0 personality successfully loaded"
 
-run $runtime
+run 30

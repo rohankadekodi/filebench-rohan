@@ -23,7 +23,7 @@
 # Use is subject to license terms.
 #
 
-set $dir=/tmp
+set $dir=/mnt/pmem_emul
 set $filesize=5g
 set $nthreads=1
 set $iosize=1m
@@ -39,3 +39,5 @@ define process name=seqread,instances=1
 }
 
 echo  "Single Stream Read Version 3.0 personality successfully loaded"
+
+run 10

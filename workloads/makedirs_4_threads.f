@@ -22,35 +22,25 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"%Z%%M%	%I%	%E% SMI"
-
+# Creates a directory with $ndirs potential leaf directories, than mkdir's them
+#
 set $dir=/mnt/pmem_emul
-set $nfiles=1000
-set $dirwidth=20
-set $filesize=16k
-set $nthreads=1
-set $meaniosize=16k
-set $readiosize=1m
+set $ndirs=10000
+set $meandirwidth=100
+set $nthreads=4
 
 set mode quit firstdone
 
-define fileset name=postset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$dirwidth,prealloc,paralloc
-define fileset name=postsetdel,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$dirwidth,prealloc,paralloc
+define fileset name=bigfileset,path=$dir,size=0,leafdirs=$ndirs,dirwidth=$meandirwidth
 
-define process name=filereader,instances=1
+define process name=dirmake,instances=1
 {
-  thread name=filereaderthread,memsize=10m,instances=$nthreads
+  thread name=dirmaker,memsize=1m,instances=$nthreads
   {
-    flowop openfile name=openfile1,filesetname=postset,fd=1
-    flowop appendfilerand name=appendfilerand1,iosize=$meaniosize,fd=1
-    flowop closefile name=closefile1,fd=1
-    flowop openfile name=openfile2,filesetname=postset,fd=1
-    flowop readwholefile name=readfile1,fd=1,iosize=$readiosize
-    flowop closefile name=closefile2,fd=1
-    flowop deletefile name=deletefile1,filesetname=postsetdel
+    flowop makedir name=mkdir1,filesetname=bigfileset
   }
 }
 
-echo  "Mongo-like Version 2.3 personality successfully loaded"
+echo  "MakeDirs Version 1.0 personality successfully loaded"
 
-run
+run 

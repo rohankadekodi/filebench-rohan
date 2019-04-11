@@ -19,25 +19,28 @@
 # CDDL HEADER END
 #
 #
-# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-
+# Creates a fileset with $nfiles empty files, then proceeds to open each one
+# and then close it.
+#
 set $dir=/mnt/pmem_emul
-set $filesize=5g
-set $nthreads=1
-set $iosize=1m
+set $nfiles=50000
+set $meandirwidth=100
+set $nthreads=3
 
-define file name=largefile1,path=$dir,size=$filesize,prealloc,reuse
+define fileset name=bigfileset,path=$dir,size=0,entries=$nfiles,dirwidth=$meandirwidth,prealloc
 
-define process name=seqread,instances=1
+define process name=fileopen,instances=1
 {
-  thread name=seqread,memsize=10m,instances=$nthreads
+  thread name=fileopener,memsize=1m,instances=$nthreads
   {
-    flowop read name=seqread,filename=largefile1,iosize=$iosize,directio
+    flowop openfile name=open1,filesetname=bigfileset,fd=1
+    flowop closefile name=close1,fd=1
   }
 }
 
-echo  "Single Stream Direct Read Version 3.0 personality successfully loaded"
+echo  "Openfiles Version 1.0 personality successfully loaded"
 
 run 10

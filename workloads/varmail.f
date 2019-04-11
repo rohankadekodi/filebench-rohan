@@ -24,13 +24,16 @@
 #
 
 set $dir=/mnt/pmem_emul
-set $nfiles=10000
+set $nfiles=1000
 set $meandirwidth=1000000
+set $cnt=500000
 set $filesize=cvar(type=cvar-gamma,parameters=mean:16384;gamma:1.5)
 set $nthreads=1
 set $iosize=1m
 set $meanappendsize=16k
 set $iters=1
+
+#set mode quit firstdone      
       
 define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=80
 
@@ -51,9 +54,10 @@ define process name=filereader,instances=1
     flowop openfile name=openfile4,filesetname=bigfileset,fd=1
     flowop readwholefile name=readfile4,fd=1,iosize=$iosize
     flowop closefile name=closefile4,fd=1
+    #flowop finishoncount name=finish,value=$cnt,target=deletefile1  
   }
 }
 
 echo  "Varmail Version 3.0 personality successfully loaded"
 
-run 20
+run 30

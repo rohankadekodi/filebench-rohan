@@ -25,10 +25,10 @@
 # Creates a fileset with a fairly deep directory tree, then does readdir
 # operations on them for a specified amount of time
 #
-set $dir=/tmp
+set $dir=/mnt/pmem_emul
 set $nfiles=50000
 set $meandirwidth=5
-set $nthreads=16
+set $nthreads=1
 
 define fileset name=bigfileset,path=$dir,size=0,entries=$nfiles,dirwidth=$meandirwidth,prealloc
 
@@ -41,3 +41,5 @@ define process name=lsdir,instances=1
 }
 
 echo  "ListDirs Version 1.0 personality successfully loaded"
+
+run 10

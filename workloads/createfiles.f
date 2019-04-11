@@ -28,7 +28,7 @@ set $nfiles=50000
 set $meandirwidth=100
 set $meanfilesize=16k
 set $iosize=1m
-set $nthreads=16
+set $nthreads=1
 
 set mode quit firstdone
 

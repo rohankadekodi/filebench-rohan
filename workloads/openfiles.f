@@ -25,10 +25,10 @@
 # Creates a fileset with $nfiles empty files, then proceeds to open each one
 # and then close it.
 #
-set $dir=/tmp
+set $dir=/mnt/pmem_emul
 set $nfiles=50000
 set $meandirwidth=100
-set $nthreads=16
+set $nthreads=1
 
 define fileset name=bigfileset,path=$dir,size=0,entries=$nfiles,dirwidth=$meandirwidth,prealloc
 
@@ -42,3 +42,5 @@ define process name=fileopen,instances=1
 }
 
 echo  "Openfiles Version 1.0 personality successfully loaded"
+
+run 10

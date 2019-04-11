@@ -27,7 +27,7 @@ set $dir=/mnt/pmem_emul
 set $nfiles=10000
 set $meandirwidth=1000000
 set $meanfilesize=16k
-set $nthreads=1
+set $nthreads=3
 set $meaniosize=16k
 set $iosize=1m
 
@@ -62,4 +62,4 @@ define process name=proxycache,instances=1
 
 echo  "Web proxy-server Version 3.0 personality successfully loaded"
 
-run 60
+run 10

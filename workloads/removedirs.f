@@ -24,6 +24,7 @@
 #
 # Creates a fileset with $ndirs empty leaf directories then rmdir's all of them
 #
+
 set $dir=/mnt/pmem_emul
 set $ndirs=10000
 set $meandirwidth=100
@@ -42,4 +43,3 @@ define process name=remdir,instances=1
 }
 
 echo  "RemoveDir Version 1.0 personality successfully loaded"
-run 10

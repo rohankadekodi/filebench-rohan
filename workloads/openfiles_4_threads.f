@@ -22,35 +22,25 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"%Z%%M%	%I%	%E% SMI"
-
-# Single-threaded writes to initially empty file.
-# I/O size is set to 8KB. After every 1024 writes 
-# (i.e., 8MB written) fsync is called.
-# The run finishes after 1GB is fully written.
-
+# Creates a fileset with $nfiles empty files, then proceeds to open each one
+# and then close it.
+#
 set $dir=/mnt/pmem_emul
-set $iosize=16k
-set $filesize=4g
-set $writeiters=1
-set $fsynccount=128
-set $iters=1
-set $nthreads=1      
+set $nfiles=50000
+set $meandirwidth=100
+set $nthreads=4
 
-set mode quit firstdone
+define fileset name=bigfileset,path=$dir,size=0,entries=$nfiles,dirwidth=$meandirwidth,prealloc
 
-define file name=bigfile,path=$dir,size=$filesize,prealloc
-
-define process name=filewriter,instances=1
+define process name=fileopen,instances=1
 {
-  thread name=filewriterthread,memsize=10m,instances=1
+  thread name=fileopener,memsize=1m,instances=$nthreads
   {
-    flowop write name=write-file,filename=bigfile,iosize=$iosize,iters=$iters
-    flowop fsync name=sync-file
-    flowop finishoncount name=finish,value=1000000,target=sync-file
+    flowop openfile name=open1,filesetname=bigfileset,fd=1
+    flowop closefile name=close1,fd=1
   }
 }
 
-echo  "FileMicro-WriteFsync Version 2.1 personality successfully loaded"
+echo  "Openfiles Version 1.0 personality successfully loaded"
 
-run
+run 10

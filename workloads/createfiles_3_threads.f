@@ -19,38 +19,30 @@
 # CDDL HEADER END
 #
 #
-# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"%Z%%M%	%I%	%E% SMI"
 
 set $dir=/mnt/pmem_emul
-set $nfiles=1000
-set $dirwidth=20
-set $filesize=16k
-set $nthreads=1
-set $meaniosize=16k
-set $readiosize=1m
+set $nfiles=50000
+set $meandirwidth=100
+set $meanfilesize=16k
+set $iosize=1m
+set $nthreads=3
 
 set mode quit firstdone
 
-define fileset name=postset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$dirwidth,prealloc,paralloc
-define fileset name=postsetdel,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$dirwidth,prealloc,paralloc
+define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth
 
-define process name=filereader,instances=1
+define process name=filecreate,instances=1
 {
-  thread name=filereaderthread,memsize=10m,instances=$nthreads
+  thread name=filecreatethread,memsize=10m,instances=$nthreads
   {
-    flowop openfile name=openfile1,filesetname=postset,fd=1
-    flowop appendfilerand name=appendfilerand1,iosize=$meaniosize,fd=1
+    flowop createfile name=createfile1,filesetname=bigfileset,fd=1
+    flowop writewholefile name=writefile1,fd=1,iosize=$iosize
     flowop closefile name=closefile1,fd=1
-    flowop openfile name=openfile2,filesetname=postset,fd=1
-    flowop readwholefile name=readfile1,fd=1,iosize=$readiosize
-    flowop closefile name=closefile2,fd=1
-    flowop deletefile name=deletefile1,filesetname=postsetdel
   }
 }
 
-echo  "Mongo-like Version 2.3 personality successfully loaded"
-
+echo  "Createfiles Version 3.0 personality successfully loaded"
 run

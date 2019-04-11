@@ -24,14 +24,17 @@
 #
 
 set $dir=/mnt/pmem_emul
-set $nfiles=50
-set $meandirwidth=1000000
-set $filesize=16m
-#set $filesize=cvar(type=cvar-gamma,parameters=mean:16384;gamma:1.5)
+set $nfiles=1000
+set $meandirwidth=20
+set $cnt=2000
+#set $filesize=16m
+set $filesize=cvar(type=cvar-gamma,parameters=mean:16384;gamma:1.5)
 set $nthreads=1
 set $iosize=1m
 set $meanappendsize=16k
 
+#set mode quit firstdone      
+      
 define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=100,readonly
 define fileset name=logfiles,path=$dir,size=$filesize,entries=1,dirwidth=$meandirwidth,prealloc
 
@@ -70,9 +73,10 @@ define process name=filereader,instances=1
     flowop readwholefile name=readfile10,fd=1,iosize=$iosize
     flowop closefile name=closefile10,fd=1
     flowop appendfilerand name=appendlog,filesetname=logfiles,iosize=$meanappendsize,fd=2
+    #flowop finishoncount name=finish,value=$cnt,target=appendlog
   }
 }
 
 echo  "Web-server Version 3.1 personality successfully loaded"
 
-run 20
+run 60

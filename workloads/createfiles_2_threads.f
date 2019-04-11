@@ -19,35 +19,30 @@
 # CDDL HEADER END
 #
 #
-# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"%Z%%M%	%I%	%E% SMI"
-
-# Single-threaded writes to initially empty file.
-# I/O size is set to 8KB. After every 1024 writes 
-# (i.e., 8MB written) fsync is called.
-# The run finishes after 1GB is fully written.
 
 set $dir=/mnt/pmem_emul
-set $iosize=4k
-set $writeiters=1
-set $fsynccount=128
+set $nfiles=50000
+set $meandirwidth=100
+set $meanfilesize=16k
+set $iosize=1m
+set $nthreads=2
 
 set mode quit firstdone
 
-define file name=bigfile,path=$dir,size=0,prealloc
+define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth
 
-define process name=filewriter,instances=1
+define process name=filecreate,instances=1
 {
-  thread name=filewriterthread,memsize=10m,instances=1
+  thread name=filecreatethread,memsize=10m,instances=$nthreads
   {
-    flowop appendfile name=append-file,filename=bigfile,iosize=$iosize,iters=$writeiters
-    flowop fsync name=sync-file
-    flowop finishoncount name=finish,value=1000000,target=sync-file
+    flowop createfile name=createfile1,filesetname=bigfileset,fd=1
+    flowop writewholefile name=writefile1,fd=1,iosize=$iosize
+    flowop closefile name=closefile1,fd=1
   }
 }
 
-echo  "FileMicro-WriteFsync Version 2.1 personality successfully loaded"
-
+echo  "Createfiles Version 3.0 personality successfully loaded"
 run

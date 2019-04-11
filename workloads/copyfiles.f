@@ -23,11 +23,11 @@
 # Use is subject to license terms.
 #
 
-set $dir=/tmp
-set $nfiles=1000
+set $dir=/mnt/pmem_emul
+set $nfiles=300
 set $meandirwidth=20
-set $meanfilesize=16k
-set $iosize=1m
+set $meanfilesize=16m
+set $iosize=16k
 set $nthreads=1
 
 set mode quit firstdone
@@ -49,3 +49,5 @@ define process name=filereader,instances=1
 }
 
 echo  "Copyfiles Version 3.0 personality successfully loaded"
+
+run

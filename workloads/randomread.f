@@ -29,9 +29,9 @@ set $iosize=4k
 set $nthreads=1
 set $workingset=0
 set $directio=0
-set $count=1000000      
+#set $count=1000000      
 
-set mode quit firstdone
+#set mode quit firstdone
       
 define file name=largefile1,path=$dir,size=$filesize,prealloc,reuse,paralloc
 
@@ -45,4 +45,4 @@ define process name=rand-read,instances=1
 }
 
 echo "Random Read Version 3.0 personality successfully loaded"
-run
+run 10

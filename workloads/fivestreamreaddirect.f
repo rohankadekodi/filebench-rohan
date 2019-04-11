@@ -23,7 +23,7 @@
 # Use is subject to license terms.
 #
 
-set $dir=/tmp
+set $dir=/mnt/pmem_emul
 set $nthreads=1
 set $filesize=1g
 set $iosize=1m
@@ -59,3 +59,5 @@ define process name=seqread,instances=1
 }
 
 echo  "Five Stream Direct Read Version 3.0 personality successfully loaded"
+
+run 10

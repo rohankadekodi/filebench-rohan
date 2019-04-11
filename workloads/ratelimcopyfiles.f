@@ -41,7 +41,7 @@
 # $nfiles - number of files in the fileset
 # $nthreads - number of worker threads
 
-set $dir=/tmp
+set $dir=/mnt/pmem_emul
 set $eventrate=10
 set $dirwidth=20
 set $filesize=16k
@@ -50,7 +50,7 @@ set $nfiles=1000
 set $nthreads=1
 
 eventgen rate=$eventrate
-set mode quit firstdone
+#set mode quit firstdone
 
 define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$dirwidth,prealloc=100
 define fileset name=destfiles,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$dirwidth
@@ -70,3 +70,5 @@ define process name=filereader,instances=1
 }
 
 echo  "RateLimCopyFiles Version 1.1 personality successfully loaded"
+
+run 10
